@@ -1,0 +1,49 @@
+#import libs
+import socket
+import hashlib
+
+#creating a class
+class FirstSocket:
+    #openning a socket
+    def __init__(self, sock = None):
+        if sock is None:
+            self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        else:
+            self.sock = sock
+    #establishing a connection
+    def connection(self,host,port):
+        #formatting the request so that we can use variables
+        request = "GET / HTTP/1.1\r\nHOST: {target_host}:{target_port}\r\n\r\n".format(target_host=host,target_port = port)
+        #connecting to hostname using the port number
+        self.sock.connect((host,port))
+        self.send_data(request)
+    #receive html data    
+    def send_data(self,msg):
+		#establishing the number of bytes (1024,2048,4096,8192)
+        num_bytes = 4096
+        self.sock.send(msg.encode())
+		#ensures that we get all of the html data
+        while true:
+          chunk = self.sock.recv(num_bytes).decode()
+          if len(chunk) < num_bytes:
+              break
+           r += chunk
+        self.sock.close()
+        print(r)
+		
+    #look for phpsession and key
+	#response must be a string if we are going to use find
+    def read_response(self,response):
+        session_start = response.find("PHPSESSID=")
+        session_end = response.find(";")
+        session = response[session_start:session_end]
+        print(session_start)
+		
+#variables 
+host = "www.google.com"
+port = int(input("Enter your port number"))
+
+#call functions
+s = FirstSocket()
+s.connection(host,port)
+
