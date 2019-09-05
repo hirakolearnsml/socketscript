@@ -18,16 +18,24 @@ class FirstSocket:
         self.sock.connect((host,port))
         self.send_data(request)
     #receive html data    
-    def send_data(self,msg):
+	def send_data(self,msg):
 		#establishing the number of bytes (1024,2048,4096,8192)
-        num_bytes = 4096
-        self.sock.send(msg.encode())
-		#ensures that we get all of the html data
-        while true:
-          chunk = self.sock.recv(num_bytes).decode()
-          if len(chunk) < num_bytes:
-              break
-           r += chunk
+        num_bytes = 8192
+        r = ''
+        self.sock.settimeout(2)
+        try:
+        	self.sock.sendall(msg.encode())
+            #ensures that we get all of the html data
+            while True:
+                print("before")
+                chunk = self.sock.recv(num_bytes).decode()
+                print(len(chunk))
+                if not chunk:
+                    break
+                r+= chunk
+        except socket.timeout as e:
+            print(e)
+            
         self.sock.close()
         print(r)
 		
