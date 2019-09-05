@@ -41,9 +41,8 @@ class FirstSocket:
 		
 #variables 
 host = "www.google.com"
-port = int(input("Enter your port number"))
+port = 80 #int(input("Enter your port number"))
 
 #call functions
 s = FirstSocket()
 s.connection(host,port)
-
