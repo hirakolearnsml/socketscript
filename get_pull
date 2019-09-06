@@ -1,5 +1,5 @@
 #import libs
-import socket
+import socket,ssl
 import hashlib
 
 #creating a class
@@ -15,6 +15,9 @@ class FirstSocket:
         #formatting the request so that we can use variables
         request = "GET / HTTP/1.1\r\nHOST: {target_host}:{target_port}\r\n\r\n".format(target_host=host,target_port = port)
         #connecting to hostname using the port number
+	if port == 443:
+            context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+            self.sock = context.wrap_socket(self.sock,server_hostname = host)
         self.sock.connect((host,port))
         self.send_data(request)
     #receive html data    
